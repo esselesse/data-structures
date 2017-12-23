@@ -16,11 +16,16 @@ public class TwoStackQueue<Item> implements IQueue<Item> {
 
     @Override
     public void enqueue(Item item) {
+        if(item==null){
+            return;
+        }
         inStack.push(item);
     }
 
     @Override
     public Item dequeue() {
+        if(this.isEmpty())
+            return null;
         if (!outStack.isEmpty())
             return outStack.pop();
 
@@ -71,15 +76,19 @@ public class TwoStackQueue<Item> implements IQueue<Item> {
 
     public static void main(String[] args) {
         TwoStackQueue<Integer> arr = new TwoStackQueue<>();
+
+        System.out.println(arr.dequeue());
+
         for (int i = 0; i < 5; i++) {
             arr.enqueue(i);
         }
+
         System.out.println(arr.dequeue());
 
         for (int i = 5; i < 20; i++) {
             arr.enqueue(i);
         }
-        for (int i = 0; i < 19; i++) {
+        for (int i = 0; i < 20; i++) {
             System.out.println(arr.dequeue());
         }
     }

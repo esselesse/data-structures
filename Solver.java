@@ -1,9 +1,10 @@
-import java.awt.geom.Arc2D;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.lang.reflect.Array;
 import java.util.Stack;
+
+import collections.ArrayStack;
 
 /**
  * ( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) ) = 101
@@ -24,8 +25,8 @@ public class Solver {
     private static final char DIVISION     = '/';
 
     private static double evaluate(String[] values) {
-        Stack<String> stack = new Stack<String>();
-        Stack<Double> numStack = new Stack<Double>();
+        ArrayStack<String> stack = new ArrayStack<String>();
+        ArrayStack<Double> numStack = new ArrayStack<Double>();
         char ch;
         for (int i = 0; i < values.length ; i++) {
             ch = values[i].charAt(0);

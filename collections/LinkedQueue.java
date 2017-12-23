@@ -11,6 +11,8 @@ public class LinkedQueue<Item> implements IQueue<Item> {
 
     @Override
     public void enqueue(Item item) {
+        if(item==null)
+            return;
         if(head==null && tail == null){
             head=tail=new Node<Item>(item);
             return;
@@ -21,9 +23,15 @@ public class LinkedQueue<Item> implements IQueue<Item> {
 
     @Override
     public Item dequeue() {
+
+
         if(head==tail) {
-            head.nope = true;
-            return head.item;
+            if(head!=null) {
+                head.nope = true;
+
+                return head.item;
+            }
+            else return null;
         }
 
         Node node = tail;
@@ -87,6 +95,9 @@ public class LinkedQueue<Item> implements IQueue<Item> {
 
     public static void main(String[] args) {
         LinkedQueue<Integer> arr = new LinkedQueue<>();
+
+        System.out.println(arr.dequeue());
+
         for (int i = 0; i < 20; i++) {
             arr.enqueue(i);
         }

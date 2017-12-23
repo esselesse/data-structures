@@ -9,6 +9,8 @@ public class LinkedDeque<Item> implements IDeque<Item> {
     int size=0;
     @Override
     public void pushFront(Item item) {
+        if(item==null)
+            return ;
         if(tail==null) {
             tail = new Node<Item>(item, null, null);
             head = tail;
@@ -16,13 +18,13 @@ public class LinkedDeque<Item> implements IDeque<Item> {
             head = new Node<Item>(item, head, null);
             head.next.prev = head;
         }
-//        if(head.next!=null)
-//            head.next.prev=head;
         this.size++;
     }
 
     @Override
     public void pushBack(Item item) {
+        if(item==null)
+            return ;
         if(head==null) {
             head = new Node<Item>(item, null, null);
             tail = head;
@@ -31,13 +33,13 @@ public class LinkedDeque<Item> implements IDeque<Item> {
             tail = new Node<Item>(item, null, tail);
             tail.prev.next = tail;
         }
-//        if(tail.prev!=null)
-//            tail.prev.next=tail;
         this.size++;
     }
 
     @Override
     public Item popFront() {
+        if(this.isEmpty())
+            return null;
         Node node = head;
         head = head.next;
         if(head!=null)
@@ -50,6 +52,8 @@ public class LinkedDeque<Item> implements IDeque<Item> {
 
     @Override
     public Item popBack() {
+        if(this.isEmpty())
+            return null;
         Node node = tail;
         tail = tail.prev;
         if(tail!=null)
@@ -76,7 +80,7 @@ public class LinkedDeque<Item> implements IDeque<Item> {
     }
 
     private class LinkedDequeIterator implements Iterator<Item> {
-
+        Node curr = head;
         @Override
         public boolean hasNext() {
             if(head==null)
@@ -88,8 +92,8 @@ public class LinkedDeque<Item> implements IDeque<Item> {
         public Item next() {
             if(!hasNext())
                 return null;
-            Item item = head.item;
-            head=head.next;
+            Item item = (Item) curr.item;
+            curr=curr.next;
             return item;
         }
 

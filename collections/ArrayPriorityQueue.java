@@ -12,37 +12,39 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
     private static final int DEFAULT_CAPACITY = 10;
 
     public ArrayPriorityQueue() {
-        /* TODO: implement it — O(n) */
         this.elementData = (Key[]) new Comparable[DEFAULT_CAPACITY];
     }
 
     public ArrayPriorityQueue(Comparator<Key> comparator) {
-        /* TODO: implement it — O(n) */
         this.comparator = comparator;
         this.elementData = (Key[]) new Comparable[DEFAULT_CAPACITY];
     }
 
     @Override
     public void add(Key key) {
+        if(key==null)
+            return;
         this.elementData[size]=key;
 
         swap(elementData, 0, size);
         this.size++;
         heapify(elementData);
 
-
-        //sort();
-
         grow();
     }
 
     @Override
     public Key peek() {
+        if(this.isEmpty())
+            return null;
+
         return elementData[0];
     }
 
     @Override
     public Key extractMin() {
+        if(this.isEmpty())
+            return null;
         Key item = elementData[0];
         swap(elementData, 0, size-1);
         elementData[size-1]=null;
@@ -54,31 +56,13 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
 
     @Override
     public boolean isEmpty() {
-        if (this.size!=0)
-            return true;
-        return false;
+        return size == 0;
     }
 
     @Override
     public int size() {
         return this.size;
     }
-
-//    private void siftUp() {
-//        /**
-//         * TODO: implement it — O(log n)
-//         * Просеивание вверх —
-//         *  подъём элемента больше родителей
-//         */
-//    }
-//
-//    private void siftDown() {
-//        /**
-//         * TODO: implement it — O(log n)
-//         * Просеивание вниз
-//         *  спуск элемента меньше детей
-//         */
-//    }
 
     private void grow() {
         if(this.size<this.elementData.length-1)
@@ -112,19 +96,30 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
 
     @Override
     public Iterator<Key> iterator() {
-        /* TODO: implement it */
-        return null;
+        return new ArrayPriorityIterator();
     }
 
+    private class ArrayPriorityIterator implements Iterator<Key> {
 
+        Key next = null;
 
-//    public void sort() {
-//        heapify(elementData);
-//        for (int i=elementData.length-1; i>=0; i--){
-//            swap(elementData, 0, i);
-//            hippy(elementData, i, 0);
-//        }
-//    }
+        @Override
+        public boolean hasNext() {
+            return peek()!=null;
+        }
+
+        @Override
+        public Key next() {
+            if(!hasNext())
+                return null;
+
+            if(next==null)
+                next=peek();
+
+            return next;
+        }
+    }
+
 
     private void heapify(Key[] array) {
         for (int i = size-1; i >= 0; i--)
@@ -158,6 +153,8 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
 
     public static void main(String[] args) {
         ArrayPriorityQueue<Integer> apq = new ArrayPriorityQueue<Integer>();
+        System.out.println(apq.extractMin());
+        apq.extractMin();
         apq.add(5);
         apq.add(3);
         apq.add(8);
@@ -212,4 +209,6 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
 
 
     }
+
+
 }

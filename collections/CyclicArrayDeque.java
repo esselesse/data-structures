@@ -18,6 +18,8 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
 
     @Override
     public void pushFront(Item item) {
+        if(item==null)
+            return;
         grow();
         this.elementData[write1]=item;
         this.size++;
@@ -32,6 +34,8 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
 
     @Override
     public void pushBack(Item item) {
+        if(item==null)
+            return;
         grow();
         this.elementData[this.write]=item;
         this.size++;
@@ -45,6 +49,8 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
 
     @Override
     public Item popFront() {
+        if(this.isEmpty())
+            return null;
         shrink();
         Item item = this.elementData[read];
         this.size--;
@@ -56,6 +62,8 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
 
     @Override
     public Item popBack() {
+        if(this.isEmpty())
+            return null;
         shrink();
         Item item = this.elementData[read1];
         this.size--;
@@ -122,8 +130,51 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
 
     @Override
     public Iterator<Item> iterator() {
-        /* TODO: implement it */
-        return null;
+        return new CyclicArrayDequeIterator();
+    }
+
+    private class CyclicArrayDequeIterator implements Iterator<Item> {
+
+
+        int shiftFront=0, shiftBack=0;
+        @Override
+        public boolean hasNext() {
+            return write==write1;
+        }
+
+        @Override
+        public Item next() {
+            if(hasNext()) {
+                int iter = read;
+                for (int i = 0; i < shiftFront; i++) {
+                    iter = inc(iter);
+                    if (iter == write)
+                        return null;
+                }
+                shiftFront++;
+                return elementData[iter];
+            }
+
+            return null;
+
+        }
+
+        public Item nextBack() {
+            if(hasNext()) {
+                int iter = read1;
+                for (int i = 0; i < shiftBack; i++) {
+                    iter = dec(iter);
+                    if (iter == write1)
+                        return null;
+                }
+                shiftBack++;
+                return elementData[iter];
+            }
+
+            return null;
+
+        }
+
     }
 
     public static void main(String[] args) {
@@ -179,4 +230,6 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
 
 
     }
+
+
 }

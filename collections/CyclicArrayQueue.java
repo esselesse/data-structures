@@ -17,6 +17,8 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
 
     @Override
     public void enqueue(Item item) {
+        if(item==null)
+            return;
         grow();
         this.elementData[this.write]=item;
         this.size++;
@@ -25,6 +27,8 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
 
     @Override
     public Item dequeue() {
+        if(this.isEmpty())
+            return null;
         shrink();
         Item item = this.elementData[read];
         this.size--;
@@ -80,20 +84,53 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
 
     @Override
     public Iterator<Item> iterator() {
-        /* TODO: implement it */
-        return null;
+        return new CyclicArrayQueueIterator();
+    }
+
+    private class CyclicArrayQueueIterator implements Iterator<Item> {
+
+        int shift=0;
+        @Override
+        public boolean hasNext() {
+            return read==write;
+        }
+
+        @Override
+        public Item next() {
+            if(hasNext()) {
+                int iter = read;
+                for (int i = 0; i < shift; i++) {
+                    iter = inc(iter);
+                    if (iter == write)
+                        return null;
+                }
+                shift++;
+                return elementData[iter];
+            }
+
+            return null;
+        }
+
     }
 
     public static void main(String[] args) {
         CyclicArrayQueue<Integer> queue = new CyclicArrayQueue<>();
+
+        System.out.println(queue.dequeue());
+        queue.enqueue(1);
+        System.out.println(queue.dequeue());
+
         for (int i = 0; i < 20; i++) {
             queue.enqueue(i);
         }
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 25; i++) {
             System.out.println(queue.dequeue());
         }
         for (int i = 0; i < 20; i++) {
             queue.enqueue(i);
+        }
+        for (int i = 0; i < 25; i++) {
+            System.out.println(queue.dequeue());
         }
 
 

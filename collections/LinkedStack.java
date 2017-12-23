@@ -9,12 +9,16 @@ public class LinkedStack<Item> implements IStack<Item> {
 
     @Override
     public void push(Item item) {
+        if(item==null)
+            return;
         head = new Node<Item>(item, head);
         size++;
     }
 
     @Override
     public Item pop() {
+        if(this.isEmpty())
+            return null;
         Node node = head;
         head = head.next;
         size--;

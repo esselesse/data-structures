@@ -17,6 +17,8 @@ public class ArrayStack<Item> implements IStack<Item> {
 
     @Override
     public void push(Item item) {
+        if(item==null)
+            return;
         grow();
         this.elementData[size]=item;
         this.size++;
@@ -24,6 +26,8 @@ public class ArrayStack<Item> implements IStack<Item> {
 
     @Override
     public Item pop() {
+        if(this.isEmpty())
+            return null;
         this.size--;
         Item item = this.elementData[size];
         this.elementData[size] = null;

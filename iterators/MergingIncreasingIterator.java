@@ -20,7 +20,6 @@ public class MergingIncreasingIterator implements Iterator<Integer> {
     public MergingIncreasingIterator(IncreasingIterator first, IncreasingIterator second) {
         this.first = first;
         this.second = second;
-        /* TODO: implement it */
     }
 
     @Override
@@ -32,15 +31,62 @@ public class MergingIncreasingIterator implements Iterator<Integer> {
 
     @Override
     public Integer next() {
-        if(!first.hasNext() && !second.hasNext())
+        int ttemp;
+        int ttemp1;
+        if(!this.hasNext())
             return null;
-        if(!first.hasNext())
+        if(!first.hasNext() && second.hasNext()) {
+            if (temp != null && temp1 == null) {
+                temp1=second.next();
+                ttemp = temp;
+                ttemp1 = temp1;
+                if(ttemp<ttemp1){
+                    temp = null;
+                    return ttemp;
+                } else {
+                    temp1 = null;
+                    return ttemp1;
+                }
+            }
+            if (temp == null && temp1 != null) {
+                ttemp1 = temp1;
+                temp1 = null;
+                return ttemp1;
+            }
             return second.next();
-        if(!second.hasNext())
+        }
+        if(!second.hasNext() && first.hasNext()) {
+            if (temp != null && temp1 == null) {
+                ttemp = temp;
+                temp = null;
+                return ttemp;
+            }
+            if (temp == null && temp1 != null) {
+                temp=first.next();
+                ttemp = temp;
+                ttemp1 = temp1;
+                if(ttemp<ttemp1){
+                    temp = null;
+                    return ttemp;
+                } else {
+                    temp1 = null;
+                    return ttemp1;
+                }
+            }
             return first.next();
-        if(temp==null && temp1 == null) {
-            temp = first.next();
-            temp1 = second.next();
+        }
+
+        if(!first.hasNext() && !second.hasNext()){
+            if(temp!=null && temp1 == null) {
+                ttemp=temp;
+                temp=null;
+                return ttemp;
+            }
+            if(temp==null && temp1 != null) {
+                ttemp1=temp1;
+                temp1=null;
+                return ttemp1;
+            }
         }
         if(temp!=null && temp1 == null) {
             temp1=second.next();
@@ -48,8 +94,12 @@ public class MergingIncreasingIterator implements Iterator<Integer> {
         if(temp1!=null && temp == null) {
             temp=first.next();
         }
-        int ttemp = temp;
-        int ttemp1 = temp1;
+        if(temp==null && temp1 == null) {
+            temp = first.next();
+            temp1 = second.next();
+        }
+        ttemp = temp;
+        ttemp1 = temp1;
         if(ttemp<ttemp1){
             temp = null;
             return ttemp;

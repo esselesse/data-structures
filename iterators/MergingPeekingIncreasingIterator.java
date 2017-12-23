@@ -16,9 +16,8 @@ import java.util.Iterator;
 public class MergingPeekingIncreasingIterator implements Iterator<Integer> {
 
     private PeekingIncreasingIterator[] iters;
-    private Integer[] temps;
-    Integer temp = null;
     Integer it=null;
+    int size=0;
 
     private Comparator<PeekingIncreasingIterator> comparator = (p1, p2) -> p1.peek().compareTo(p2.peek());
 
@@ -26,54 +25,70 @@ public class MergingPeekingIncreasingIterator implements Iterator<Integer> {
         iters = new PeekingIncreasingIterator[peekingIterator.length];
         for (int i = 0; i < peekingIterator.length; i++) {
             iters[i] = (PeekingIncreasingIterator) peekingIterator[i];
+            size++;
         }
-        temps = new Integer[peekingIterator.length];
+        heapify(iters);
     }
+
+    private boolean greater(int i, int j) {
+        if(iters[j]==null)
+            return false;
+        return comparator == null
+                ? iters[i].compareTo(iters[j]) > 0
+                : comparator.compare(iters[i], iters[j]) > 0
+                ;
+    }
+
+    protected void swap(Iterator<Integer>[] array, int j, int i) {
+        Iterator<Integer> temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+
+    private void heapify(Iterator<Integer>[] array) {
+        for (int i = array.length-1; i >= 0; i--)
+            hippy(array, array.length, i);
+    }
+
+    private void hippy(Iterator<Integer>[] array, int n, int i) {
+        int largest = i;
+        int left = 2*i + 1;
+        int right = 2*i + 2;
+
+        if (left < n && greater(largest, left))
+            largest = left;
+
+        if (right < n && greater(largest, right))
+            largest = right;
+
+        if (largest != i)
+        {
+            swap(array, i, largest);
+            hippy(array, n, largest);
+        }
+    }
+
 
     @Override
     public boolean hasNext() {
-        for (PeekingIncreasingIterator it: iters) {
-            if(it.hasNext())
-                return true;
-        }
-        for (Integer a: temps) {
-            if(a!=null)
-                return true;
-        }
+        if(size!=0)
+            return true;
         return false;
     }
 
     @Override
     public Integer next() {
-
-        if(this.hasNext()) {
-            for (int i=0; i<temps.length; i++) {
-                if(iters[i].hasNext()&&temps[i]==null)
-                    temps[i]=iters[i].next();
-            }
-            temp = null;
-            it=null;
-            for (int i=0; i<temps.length; i++) {
-                if (temps[i] != null) {
-                    if (temp == null) {
-                        temp = temps[i];
-                        it=i;
-                    }
-                    else {
-                        if(temp.compareTo(temps[i]) >= 0) {
-                            temp = temps[i];
-                            it = i;
-                        }
-                    }
-                }
-            }
-            if(temp!=null){
-                temps[it]=null;
-                return temp;
-            }
+        if(!hasNext())
             return null;
+        it = iters[0].next();
+        if(iters[0].hasNext()){
+            hippy(iters, size, 0);
+        } else {
+            swap(iters, 0, size-1);
+            size--;
+            hippy(iters, size, 0);
         }
-        return null;
+        return it;
     }
 
     public static void main(String[] args) {
@@ -85,7 +100,6 @@ public class MergingPeekingIncreasingIterator implements Iterator<Integer> {
         PeekingIncreasingIterator it6 = new PeekingIncreasingIterator(2, 100, 100);
 
         MergingPeekingIncreasingIterator mpit = new MergingPeekingIncreasingIterator(it1, it2, it3, it4, it5, it6);
-
 
         while (mpit.hasNext()) {
             System.out.println(mpit.next());

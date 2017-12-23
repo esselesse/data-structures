@@ -1,13 +1,10 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.DoubleSummaryStatistics;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
-import java.util.Stack;
-import java.util.concurrent.PriorityBlockingQueue;
+
+
+import collections.ArrayStack;
+import collections.LinkedQueue;
 
 /**
  * ( 1 + ( ( 2 + 3 ) * ( 4 * 5 ) ) ) = 101
@@ -36,15 +33,15 @@ public class SolverExt {
     private static final char DIVISION     = '/';
 
     private static double evaluate(String[] values) {
-        Stack<Character> stack = new Stack<Character>();
-        Stack<String> lastStack = new Stack<String>();
-        List<String> fullStack = new LinkedList<String>();
+        ArrayStack<Character> stack = new ArrayStack<Character>();
+        ArrayStack<String> lastStack = new ArrayStack<String>();
+        LinkedQueue<String> fullStack = new LinkedQueue<String>();
 
         for (int i = 0; i < values.length ; i++) {
             switch (values[i].charAt(0)){
                 case RIGHT_PAREN: {
                     while (stack.peek()!=LEFT_PAREN){
-                        fullStack.add(Character.toString(stack.pop())); //danger! stackoverflow
+                        fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     }
                     stack.pop();
                     break;
@@ -56,42 +53,43 @@ public class SolverExt {
                 case PLUS: {
                     if(!stack.isEmpty())
                     while(stack.peek()==PLUS || stack.peek()==MINUS || stack.peek()==TIMES || stack.peek()==DIVISION )
-                        fullStack.add(Character.toString(stack.pop())); //danger! stackoverflow
+                        fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     stack.push(PLUS);
                     break;
                 }
                 case MINUS: {
                     if(!stack.isEmpty())
                     while(stack.peek()==PLUS || stack.peek()==MINUS || stack.peek()==TIMES || stack.peek()==DIVISION )
-                        fullStack.add(Character.toString(stack.pop())); //danger! stackoverflow
+                        fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     stack.push(MINUS);
                     break;
                 }
                 case TIMES: {
                     if(!stack.isEmpty())
                     while(stack.peek()==DIVISION || stack.peek()==TIMES)
-                        fullStack.add(Character.toString(stack.pop())); //danger! stackoverflow
+                        fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     stack.push(TIMES);
                     break;
                 }
                 case DIVISION: {
                     if(!stack.isEmpty())
                     while(stack.peek()==TIMES || stack.peek()==DIVISION)
-                        fullStack.add(Character.toString(stack.pop())); //danger! stackoverflow
+                        fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     stack.push(DIVISION);
                     break;
                 }
                 default:{
-                    fullStack.add(values[i]);
+                    fullStack.enqueue(values[i]);
                 }
             }
         }
         while (!stack.isEmpty()){
-            fullStack.add(Character.toString(stack.pop())); //danger! stackoverflow
+            fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
         }
 
-        for (int i = 0; i < fullStack.size(); i++) {
-            switch (fullStack.get(i).charAt(0)){
+        while(fullStack.size()>0) {
+            String temp = fullStack.dequeue();
+            switch (temp.charAt(0)){
             case PLUS: {
                 double a = Double.parseDouble(lastStack.pop());
                 double b = Double.parseDouble(lastStack.pop());
@@ -117,7 +115,7 @@ public class SolverExt {
                 break;
             }
             default:{
-                lastStack.push(fullStack.get(i));
+                lastStack.push(temp);
             }
             }
         }

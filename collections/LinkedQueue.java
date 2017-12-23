@@ -15,6 +15,7 @@ public class LinkedQueue<Item> implements IQueue<Item> {
             return;
         if(head==null && tail == null){
             head=tail=new Node<Item>(item);
+            size++;
             return;
         }
         tail = new Node(item, tail);
@@ -28,8 +29,11 @@ public class LinkedQueue<Item> implements IQueue<Item> {
         if(head==tail) {
             if(head!=null) {
                 head.nope = true;
-
-                return head.item;
+                Item item = head.item;
+                head=null;
+                tail=null;
+                size=0;
+                return item;
             }
             else return null;
         }

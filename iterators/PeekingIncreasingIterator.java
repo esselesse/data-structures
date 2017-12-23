@@ -33,4 +33,12 @@ public class PeekingIncreasingIterator extends IncreasingIterator implements IPe
         }
         return peekedElement;
     }
+
+    public int compareTo(PeekingIncreasingIterator iter) {
+        if(this.peek()>iter.peek())
+            return 1;
+        if(this.peek()<iter.peek())
+            return -1;
+        return 0;
+    }
 }

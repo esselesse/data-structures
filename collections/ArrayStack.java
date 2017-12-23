@@ -45,6 +45,12 @@ public class ArrayStack<Item> implements IStack<Item> {
         return size;
     }
 
+    public Item peek(){
+        if(isEmpty())
+            return null;
+        return this.elementData[size-1];
+    }
+
     private void grow() {
         if(this.size<this.elementData.length-1)
             return;

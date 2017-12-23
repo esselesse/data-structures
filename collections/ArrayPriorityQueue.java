@@ -101,23 +101,18 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
 
     private class ArrayPriorityIterator implements Iterator<Key> {
 
-        Key next = null;
+        private int currentPosition = 0;
 
         @Override
         public boolean hasNext() {
-            return peek()!=null;
+            return currentPosition != 0;
         }
 
         @Override
         public Key next() {
-            if(!hasNext())
-                return null;
-
-            if(next==null)
-                next=peek();
-
-            return next;
+            return elementData[++currentPosition];
         }
+
     }
 
 

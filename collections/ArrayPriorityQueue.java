@@ -4,8 +4,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
 
-import javax.swing.KeyStroke;
-
 public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorityQueue<Key> {
 
     private Key[] elementData;
@@ -111,10 +109,18 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
         }
 
         @Override
-        public Key next() throws NullPointerException {
-            if(hasNext())
-                return elementData[++currentPosition];
+        public Key next()  {
+            if(hasNext()) {
+                int a = currentPosition;
+                currentPosition++;
+                return elementData[a];
+            }
             else{
+                try {
+                    throw new NullPointerException();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return null; //чтоб жизнь мёдом не казалась.
             }
         }
@@ -158,19 +164,21 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
 
         System.out.println(apq.extractMin());
         apq.extractMin();
-        try {
+
 
 
             apq.add(5);
             apq.add(3);
             apq.add(8);
-        } catch (NullPointerException exception){};
+
         Iterator it = apq.iterator();
         it.hasNext();
         int a= (int) it.next();
+                try {
         a= (int) it.next();
         a= (int) it.next();
         a= (int) it.next();
+                } catch (NullPointerException exception){};
         apq.add(7);
         apq.add(6);
         apq.add(1);

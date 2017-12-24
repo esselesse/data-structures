@@ -3,6 +3,7 @@ package collections;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorityQueue<Key> {
 
@@ -116,12 +117,7 @@ public class ArrayPriorityQueue<Key extends Comparable<Key>> implements IPriorit
                 return elementData[a];
             }
             else{
-                try {
-                    throw new NullPointerException();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                return null; //чтоб жизнь мёдом не казалась.
+                throw new NoSuchElementException();
             }
         }
 

@@ -16,6 +16,7 @@ public class LinkedQueue<Item> implements IQueue<Item> {
         if(head==null && tail == null){
             head=tail=new Node<Item>(item);
             size++;
+            head.nope=false;
             return;
         }
         tail = new Node(item, tail);
@@ -64,12 +65,13 @@ public class LinkedQueue<Item> implements IQueue<Item> {
 
     private class LinkedQueueIterator implements Iterator<Item> {
 
+        Node curr = tail;
         @Override
         public boolean hasNext() {
             if(head.nope)
                 return false;
-            if(head.next!=null)
-            return true;
+            if(curr!=null)
+                return true;
             return false;
         }
 
@@ -77,7 +79,11 @@ public class LinkedQueue<Item> implements IQueue<Item> {
         public Item next() {
             if(head.nope)
                 return null;
-            return head.next.item;
+            Item a = (Item) curr.item;
+            if(curr.next!=null)
+                curr=curr.next;
+            else curr=null;
+            return a;
         }
 
     }
@@ -104,6 +110,12 @@ public class LinkedQueue<Item> implements IQueue<Item> {
 
         for (int i = 0; i < 20; i++) {
             arr.enqueue(i);
+        }
+
+
+        Iterator<Integer> iterator = arr.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
         }
         for (int i = 0; i < 20; i++) {
             System.out.println(arr.dequeue());

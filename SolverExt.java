@@ -2,7 +2,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-
 import collections.ArrayStack;
 import collections.LinkedQueue;
 
@@ -40,7 +39,7 @@ public class SolverExt {
         for (int i = 0; i < values.length ; i++) {
             switch (values[i].charAt(0)){
                 case RIGHT_PAREN: {
-                    while (stack.peek()!=LEFT_PAREN){
+                    while (!stack.isEmpty() && stack.peek()!=LEFT_PAREN){
                         fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     }
                     stack.pop();
@@ -51,29 +50,27 @@ public class SolverExt {
                     break;
                 }
                 case PLUS: {
-                    if(!stack.isEmpty())
-                    while(stack.peek()==PLUS || stack.peek()==MINUS || stack.peek()==TIMES || stack.peek()==DIVISION )
+                    while(!stack.isEmpty() && (stack.peek()==PLUS || stack.peek()==MINUS || stack.peek()==TIMES || stack.peek()==DIVISION ))
                         fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     stack.push(PLUS);
                     break;
                 }
                 case MINUS: {
-                    if(!stack.isEmpty())
-                    while(stack.peek()==PLUS || stack.peek()==MINUS || stack.peek()==TIMES || stack.peek()==DIVISION )
+                        while(!stack.isEmpty() && (stack.peek()==PLUS || stack.peek()==MINUS || stack.peek()==TIMES || stack.peek()==DIVISION ))
                         fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     stack.push(MINUS);
                     break;
                 }
                 case TIMES: {
                     if(!stack.isEmpty())
-                    while(stack.peek()==DIVISION || stack.peek()==TIMES)
+                    while(!stack.isEmpty() && (stack.peek()==DIVISION || stack.peek()==TIMES))
                         fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     stack.push(TIMES);
                     break;
                 }
                 case DIVISION: {
                     if(!stack.isEmpty())
-                    while(stack.peek()==TIMES || stack.peek()==DIVISION)
+                    while(!stack.isEmpty() && (stack.peek()==TIMES || stack.peek()==DIVISION))
                         fullStack.enqueue(Character.toString(stack.pop())); //danger! stackoverflow
                     stack.push(DIVISION);
                     break;

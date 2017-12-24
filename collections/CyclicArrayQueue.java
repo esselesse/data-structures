@@ -88,32 +88,37 @@ public class CyclicArrayQueue<Item> implements IQueue<Item> {
 
     private class CyclicArrayQueueIterator implements Iterator<Item> {
 
-        int shift=0;
+
+        int shiftFront = 0, shiftBack = 0;
+        int iter = read;
+
         @Override
         public boolean hasNext() {
-            return read==write;
+            return iter != write;
         }
 
         @Override
         public Item next() {
-            if(hasNext()) {
-                int iter = read;
-                for (int i = 0; i < shift; i++) {
-                    iter = inc(iter);
-                    if (iter == write)
-                        return null;
-                }
-                shift++;
-                return elementData[iter];
+            if (hasNext()) {
+                int temp = iter;
+                iter = inc(iter);
+                return elementData[temp];
             }
 
             return null;
-        }
 
+        }
     }
 
     public static void main(String[] args) {
         CyclicArrayQueue<Integer> queue = new CyclicArrayQueue<>();
+
+
+        queue.enqueue(1);
+        Iterator<Integer> iterator = queue.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
 
         System.out.println(queue.dequeue());
         queue.enqueue(1);

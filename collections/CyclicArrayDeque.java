@@ -137,22 +137,18 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
 
 
         int shiftFront=0, shiftBack=0;
+        int iter=read;
         @Override
         public boolean hasNext() {
-            return write==write1;
+            return iter!=write;
         }
 
         @Override
         public Item next() {
             if(hasNext()) {
-                int iter = read;
-                for (int i = 0; i < shiftFront; i++) {
-                    iter = inc(iter);
-                    if (iter == write)
-                        return null;
-                }
-                shiftFront++;
-                return elementData[iter];
+                int temp=iter;
+                iter=inc(iter);
+                return elementData[temp];
             }
 
             return null;
@@ -178,7 +174,17 @@ public class CyclicArrayDeque<Item> implements IDeque<Item> {
     }
 
     public static void main(String[] args) {
+
         CyclicArrayDeque<Integer> cad = new CyclicArrayDeque<Integer>();
+        cad.pushBack(1);
+        cad.pushBack(2);
+        System.out.println("size = " + cad.size());
+        Iterator<Integer> iterator = cad.iterator();
+        while (iterator.hasNext()) {
+            System.out.println(iterator.next());
+        }
+
+
         cad.pushBack(2);
         cad.pushFront(1);
         cad.pushBack(3);
